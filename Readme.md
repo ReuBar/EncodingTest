@@ -2,7 +2,11 @@ Encoding Test
 
 This solves Exercise 3 for the Core Engineers. 
 
-It is made up of three Projects within the solution, all using .Net Framework 4.7.2 
+Considering how simple the solution is, it was decided to keep it simple, without abusing design patterns
+or over-architecting or over-engineering the solution. For this reason the main methods are in a simple
+Class Library, which are then called from a simple Console Application.
+
+The solution is made up of three Projects, all using .Net Framework 4.7.2 
 
 	Blake2bHasher is a Windows Console application which is meant to be a standalone application to run the Implementation.
 	It contains a config file which contains two tags. These can be modified to deal with different inputs.
@@ -40,15 +44,14 @@ The Using keywork was used whenever a Stream was handled, to ensure proper dispo
 
 The name of the company was left out of the solution, to avoid other candidates finding ready-solutions on Github.
 
+
 ASSUMPTIONS: 
 
 If Tags are missing, it will safely ignore them as opposed to throwing an Exception.
 This can be easily changed if the requirements are otherwise.
 
-Point 5 states "Base64url encode the resulting hash." 
-I am not sure why it said Base64url 
-Starting from the above example you should get the following output:
-EQ9q1Hjyr_pfSBj1_M2vqAMFH-MYhP2zwhgYfC8u8-g
+The Digest Length chosen for the Blake2b algorithm was 32, since this gave the same result as expected.
+
 
 TODO:
 

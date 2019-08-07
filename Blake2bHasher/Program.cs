@@ -12,6 +12,8 @@ namespace Blake2bHasher
     {
         static void Main(string[] args)
         {
+
+            #region Read Data from Config File
             string encodedStringKey = "EncodedString";
             string tagsIdKey = "TagIds";
             string encodedString = ConfigurationManager.AppSettings[encodedStringKey];
@@ -37,6 +39,11 @@ namespace Blake2bHasher
                 Console.ReadKey();
                 return;
             }
+
+            #endregion
+
+            #region Get hash from values extracted
+
             try
             {
                 string hash = BerTlvLogic.GetBase64HashFromEncodedStringForGivenTags(requestedTags, encodedString);
@@ -51,7 +58,7 @@ namespace Blake2bHasher
                 return;
             }
 
-            int i = 0;
+            #endregion
         }
     }
 }
