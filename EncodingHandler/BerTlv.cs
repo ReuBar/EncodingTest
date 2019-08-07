@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SauceControl.Blake2Fast;
+using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EncodingHandler
 {
@@ -58,6 +59,32 @@ namespace EncodingHandler
             if (sortedValues == null)
                 return String.Empty;
             return String.Join(".", sortedValues);
+        }
+
+
+
+        /// <summary>
+        /// Since data provided might be massive, it is not recommended to read it all into memory at the same time.
+        /// For this reason we use Streams and only hash it in chunks
+        /// </summary>
+        /// <param name="data">Stream of data to be hashed</param>
+        /// <param name="digestLength">Optional parameter for digest Length to be used when Hashing. Defaults to 32</param>
+        /// <param name="bufferToDigestRatio">Optional parameter to define buffer size as a ratio to the Digest Length. Defaults to 128
+        /// The bigger the bufferToDigestRatio, the more you are sacrificing memory use to gain speed.</param>
+        /// <returns>Returns Base64 Encoded String with hashed value</returns>
+        public static string ComputeBase64Blake2bHashInBuffers(Stream data, int digestLength = 32, int bufferToDigestRatio = 128)
+        {
+            var hasher = Blake2b.CreateIncrementalHasher(digestLength);
+            var buffer = ArrayPool<byte>.Shared.Rent(digestLength);
+
+            int bytesRead;
+            while ((bytesRead = data.Read(buffer, 0, buffer.Length)) > 0)
+                hasher.Update(new Span<byte>(buffer, 0, bytesRead));
+
+            ArrayPool<byte>.Shared.Return(buffer);
+
+           return Convert.ToBase64String(hasher.Finish());
+                
         }
     }
 }

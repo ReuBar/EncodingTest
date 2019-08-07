@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using EncodingHandler;
+﻿using EncodingHandler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace EncodingUnitTests
 {
@@ -151,6 +153,50 @@ namespace EncodingUnitTests
                 "34EC",
                 "8394B17AC3"
             }));
+        }
+
+        #endregion
+
+        #region HashingOfStreams
+
+        [TestMethod]
+        public void HashDefaultValuesStream()
+        {
+            string startString = "6EF72AC5367180EB.BDADB4E0.DE60.40D4241E426BBDE12BCA805F665227E8.34EC.8394B17AC3";
+            using (Stream temp = new MemoryStream(Encoding.UTF8.GetBytes(startString)))
+            {
+               Assert.AreEqual(@"EQ9q1Hjyr/pfSBj1/M2vqAMFH+MYhP2zwhgYfC8u8+g=", BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp));
+            }           
+        }
+
+        [TestMethod]
+        public void HashStreamWithLargeBuffer()
+        {
+            string startString = "6EF72AC5367180EB.BDADB4E0.DE60.40D4241E426BBDE12BCA805F665227E8.34EC.8394B17AC3";
+            using (Stream temp = new MemoryStream(Encoding.UTF8.GetBytes(startString)))
+            {
+                Assert.AreEqual(@"EQ9q1Hjyr/pfSBj1/M2vqAMFH+MYhP2zwhgYfC8u8+g=", BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp,32,1280));
+            }
+        }
+
+        [TestMethod]
+        public void HashStreamWithSmallBuffer()
+        {
+            string startString = "6EF72AC5367180EB.BDADB4E0.DE60.40D4241E426BBDE12BCA805F665227E8.34EC.8394B17AC3";
+            using (Stream temp = new MemoryStream(Encoding.UTF8.GetBytes(startString)))
+            {
+                Assert.AreEqual(@"EQ9q1Hjyr/pfSBj1/M2vqAMFH+MYhP2zwhgYfC8u8+g=", BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp, 32, 1));
+            }
+        }
+
+        [TestMethod]
+        public void HashStreamWithEmptyString()
+        {
+            string startString = "";
+            using (Stream temp = new MemoryStream(Encoding.UTF8.GetBytes(startString)))
+            {
+                Assert.AreEqual(@"DldRwCblQ7Loqy6wYJnaodHl30d3j3eH+qtFzfEv46g=", BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp));
+            }
         }
 
         #endregion
