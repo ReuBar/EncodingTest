@@ -1,4 +1,4 @@
-Encoding Test
+# Encoding Test #
 
 This solves Exercise 3 for the Core Engineers. 
 
@@ -34,31 +34,31 @@ The solution is made up of three Projects, all using .Net Framework 4.7.2
 
 
 	
-REASONING:
+## REASONING: ##
 
-The solution makes use of Buffering for the Hashing. This is to ensure that if big data is provided, 
+* The solution makes use of Buffering for the Hashing. This is to ensure that if big data is provided, 
 it will not run out of memory or slow down other processes running. The values of Digest Length and
 Buffer Size can be changed easily as exposed parameters.
 
-The Using keywork was used whenever a Stream was handled, to ensure proper disposal of IDisposable resources.
+* The Using keywork was used whenever a Stream was handled, to ensure proper disposal of IDisposable resources.
 
-The name of the company was left out of the solution, to avoid other candidates finding ready-solutions on Github.
+* The name of the company was left out of the solution, to avoid other candidates finding ready-solutions on Github.
 
 
-ASSUMPTIONS: 
+## ASSUMPTIONS: ##
 
-If Tags are missing, it will safely ignore them as opposed to throwing an Exception.
+* If Tags are missing, it will safely ignore them as opposed to throwing an Exception.
 This can be easily changed if the requirements are otherwise.
 
-The Digest Length chosen for the Blake2b algorithm was 32, since this gave the same result as expected.
+* The Digest Length chosen for the Blake2b algorithm was 32, since this gave the same result as expected.
 
 
-TODO:
+## TODO: ## 
 
 Given more time:
-	A better structure for the code would have been used
-	A logging framework such as Log4Net would have been used
-	I would have created a proper branch and worked on it, and merged at the end, rather than working on Main
-	Extension methods would have been used for methods such as converting hex to int.
-	LINQ could have been used for handling of data, but for readability this was not done to avoid having massive one-liners.
+	* A better structure for the code would have been used
+	* A logging framework such as Log4Net would have been used
+	* I would have created a proper branch and worked on it, and merged at the end, rather than working on Main
+	* Extension methods would have been used for methods such as converting hex to int.
+	* LINQ could have been used for handling of data, but for readability this was not done to avoid having massive one-liners.
 
