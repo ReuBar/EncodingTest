@@ -2,7 +2,7 @@
 
 This solves Exercise 3 for the Core Engineers. 
 
-Considering how simple the solution is, it was decided to keep it simple, without abusing design patterns
+Considering how simple the solution is, it was decided to keep it elegant, without abusing design patterns
 or over-architecting or over-engineering the solution. For this reason the main methods are in a simple
 Class Library, which are then called from a simple Console Application.
 
@@ -13,9 +13,10 @@ The solution is made up of three Projects, all using .Net Framework 4.7.2
 		* EncodedString contains the Encoded string to start from, which is BER TLV Encoded
 		* TagIds is a comma separated list of hex values to specify which tags to extract
 
-*EncodingHandler is a Class Library which contains the Business Logic layer. It exposes all methods needs,
+* EncodingHandler is a Class Library which contains the Business Logic layer. It exposes all methods needs,
 plus a main one GetBase64HashFromEncodedStringForGivenTags which returns the Hashed value.
-	* It makes use of the following two NuGet libraries:
+	* It makes use of the following three NuGet libraries:
+
 		* https://github.com/kspearrin/BerTlv.NET  License: Free to Use
 		This is used to parse the BerTlv String
 
@@ -30,7 +31,7 @@ plus a main one GetBase64HashFromEncodedStringForGivenTags which returns the Has
 		These were chosen for this exercise because they seemed popular enough and gave correct results.
 
 * EncodingUnitTests contains all Unit Tests implemented using the default MSTest Framework.
-	*Given more time metrics such as speed metrics and RAM usage would have been recorded
+	* Given more time metrics such as speed metrics and RAM usage would have been recorded
 
 
 	
@@ -62,4 +63,5 @@ Given more time:
 * I would have created a proper branch and worked on it, and merged at the end, rather than working on Main
 * Extension methods would have been used for methods such as converting hex to int.
 * LINQ could have been used for handling of data, but for readability this was not done to avoid having massive one-liners.
+* Performance metrics would have been gathered and recorded over time, to ensure no performance degradation happens over time.
 
