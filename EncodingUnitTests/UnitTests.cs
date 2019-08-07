@@ -78,9 +78,18 @@ namespace EncodingUnitTests
         public void MissingTagsAreSafelyIgnored()
         {
             string originalEncoded = @"0812561ae6bd42cfb7bee1311a29893508e71c340912e4614f3d9e6c61dccdd5af228051eb4373170A058394b17ac301086ef72ac5367180eb051040d4241e426bbde12bca805f665227e8060234ec07042859ffbc0202b4ed0304bdadb4e00402de60";
-            string[] requestedTags = { "0x01", "0x03", "0x04", "0x05", "0x06", "0x0a","0xaa" };
+            string[] requestedTags = { "0x01", "0x03", "0x04", "0x05", "0x06", "0x0a", "0xaa" };
             List<string> extractedValues = BerTlvLogic.ExtractSortedRequestedTagsFromString(requestedTags, originalEncoded);
             Assert.AreEqual(6, extractedValues.Count);
+        }
+
+        [TestMethod]
+        public void AllTagsAreMissing()
+        {
+            string originalEncoded = @"0812561ae6bd42cfb7bee1311a29893508e71c340912e4614f3d9e6c61dccdd5af228051eb4373170A058394b17ac301086ef72ac5367180eb051040d4241e426bbde12bca805f665227e8060234ec07042859ffbc0202b4ed0304bdadb4e00402de60";
+            string[] requestedTags = { "0xaa", "0xba" };
+            List<string> extractedValues = BerTlvLogic.ExtractSortedRequestedTagsFromString(requestedTags, originalEncoded);
+            Assert.AreEqual(0, extractedValues.Count);
         }
 
         [TestMethod]
@@ -94,12 +103,54 @@ namespace EncodingUnitTests
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
-        public void CorruptedString()
+        public void ExtractTagsFromCorruptedString()
         {
             string originalEncoded = @"ThisIsClearlyNotBerTlvEncoded";
-            string[] requestedTags = { };
+            string[] requestedTags = { "0x01", "0x03", "0x04", "0x05", "0x06", "0x0a", "0xaa" };
             List<string> extractedValues = BerTlvLogic.ExtractSortedRequestedTagsFromString(requestedTags, originalEncoded);
             Assert.AreEqual(0, extractedValues.Count);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void ExtractNullTags()
+        {
+            string originalEncoded = @"ThisIsClearlyNotBerTlvEncoded";
+            string[] requestedTags = null;
+            List<string> extractedValues = BerTlvLogic.ExtractSortedRequestedTagsFromString(requestedTags, originalEncoded);
+            Assert.AreEqual(0, extractedValues.Count);
+        }
+
+        #endregion
+
+        #region StringConcatenation
+
+        [TestMethod]
+        public void ConcatenateNullList()
+        {
+            Assert.AreEqual(String.Empty, BerTlvLogic.CreateFullstopSeparatedString(null));
+        }
+
+        [TestMethod]
+        public void ConcatenateEmptyList()
+        {
+            Assert.AreEqual(String.Empty, BerTlvLogic.CreateFullstopSeparatedString(new List<string>()));
+        }
+
+
+        [TestMethod]
+        public void ConcatenatePopulatedList()
+        {
+            Assert.AreEqual("6EF72AC5367180EB.BDADB4E0.DE60.40D4241E426BBDE12BCA805F665227E8.34EC.8394B17AC3",
+                BerTlvLogic.CreateFullstopSeparatedString(new List<string>
+            {
+                "6EF72AC5367180EB",
+                "BDADB4E0",
+                "DE60",
+                "40D4241E426BBDE12BCA805F665227E8",
+                "34EC",
+                "8394B17AC3"
+            }));
         }
 
         #endregion

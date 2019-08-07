@@ -36,13 +36,28 @@ namespace EncodingHandler
             List<string> requestedTagsToReturn = new List<string>();
             foreach (int tagId in sortedIds)
             {
-                if(allBerValues.Any(f=>f.Tag == tagId))
+                if (allBerValues.Any(f => f.Tag == tagId))
                 {
                     requestedTagsToReturn.Add(allBerValues.First(g => g.Tag == tagId).HexValue);
                 }
             }
             return requestedTagsToReturn;
 
+        }
+
+        /// <summary>
+        /// Taking a sorted List of String values, concatenate them using a separator.
+        /// The separator is optional, and defaults to a full stop (.)
+        /// </summary>
+        /// <param name="sortedValues">A List of Sorted String Values to concatenate</param>
+        /// <param name="separator">An optional string that is used to separate the string values provided</param>
+        /// <returns>One string made up of all values provided, in order, separated by the provided separator. 
+        /// If this is not provided, a full-stop is used.</returns>
+        public static string CreateFullstopSeparatedString(List<string> sortedValues, string separator = ".")
+        {
+            if (sortedValues == null)
+                return String.Empty;
+            return String.Join(".", sortedValues);
         }
     }
 }
