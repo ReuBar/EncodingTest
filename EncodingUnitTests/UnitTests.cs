@@ -26,6 +26,12 @@ namespace EncodingUnitTests
         }
 
         [TestMethod]
+        public void Convert3Trimmed()
+        {
+            Assert.AreEqual(3, BerTlvLogic.HexadecimalToInteger(" 0x03 "));
+        }
+
+        [TestMethod]
         public void Convert4()
         {
             Assert.AreEqual(4, BerTlvLogic.HexadecimalToInteger("0x04"));
@@ -197,6 +203,19 @@ namespace EncodingUnitTests
             {
                 Assert.AreEqual(@"DldRwCblQ7Loqy6wYJnaodHl30d3j3eH+qtFzfEv46g=", BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp));
             }
+        }
+
+        #endregion
+
+        #region MainMethod
+
+        [TestMethod]
+        public void EnsureMainMethodWorks()
+        {
+            string originalEncoded = @"0812561ae6bd42cfb7bee1311a29893508e71c340912e4614f3d9e6c61dccdd5af228051eb4373170A058394b17ac301086ef72ac5367180eb051040d4241e426bbde12bca805f665227e8060234ec07042859ffbc0202b4ed0304bdadb4e00402de60";
+            string[] requestedTags = { "0x01", "0x03", "0x04", "0x05", "0x06", "0x0a" };
+            string hash = BerTlvLogic.GetBase64HashFromEncodedStringForGivenTags(requestedTags, originalEncoded);
+            Assert.AreEqual(@"EQ9q1Hjyr/pfSBj1/M2vqAMFH+MYhP2zwhgYfC8u8+g=", hash);
         }
 
         #endregion

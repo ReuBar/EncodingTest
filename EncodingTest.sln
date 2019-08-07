@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodingHandler", "Encoding
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncodingUnitTests", "EncodingUnitTests\EncodingUnitTests.csproj", "{4BE2AC2F-7D28-4488-84A7-CA507FC89323}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blake2bHasher", "Blake2bHasher\Blake2bHasher.csproj", "{3DF77B51-9494-4AF7-94D8-8CC9CCA14BE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4BE2AC2F-7D28-4488-84A7-CA507FC89323}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BE2AC2F-7D28-4488-84A7-CA507FC89323}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BE2AC2F-7D28-4488-84A7-CA507FC89323}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DF77B51-9494-4AF7-94D8-8CC9CCA14BE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF77B51-9494-4AF7-94D8-8CC9CCA14BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF77B51-9494-4AF7-94D8-8CC9CCA14BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF77B51-9494-4AF7-94D8-8CC9CCA14BE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,11 +4,27 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace EncodingHandler
 {
     public static class BerTlvLogic
     {
+        public static string GetBase64HashFromEncodedStringForGivenTags(string[] tags, string encodedString)
+        {
+            List<string> sortedValues = ExtractSortedRequestedTagsFromString(tags, encodedString);
+            string concatenatedString = CreateFullstopSeparatedString(sortedValues);
+
+            string toReturn;
+            using (Stream temp = new MemoryStream(Encoding.UTF8.GetBytes(concatenatedString)))
+            {
+                toReturn =  BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp);
+            }
+
+            return toReturn;
+
+        }
+
         /// <summary>
         /// Wrap Hexademical to Integer conversion into a well-named method
         /// </summary>
@@ -16,7 +32,7 @@ namespace EncodingHandler
         /// <returns></returns>
         public static int HexadecimalToInteger(string hex)
         {
-            return Convert.ToInt32(hex, 16);
+            return Convert.ToInt32(hex.Trim(), 16);
         }
 
         /// <summary>
@@ -62,7 +78,6 @@ namespace EncodingHandler
         }
 
 
-
         /// <summary>
         /// Since data provided might be massive, it is not recommended to read it all into memory at the same time.
         /// For this reason we use Streams and only hash it in chunks
@@ -83,8 +98,8 @@ namespace EncodingHandler
 
             ArrayPool<byte>.Shared.Return(buffer);
 
-           return Convert.ToBase64String(hasher.Finish());
-                
+            return Convert.ToBase64String(hasher.Finish());
+
         }
     }
 }
