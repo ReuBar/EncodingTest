@@ -1,4 +1,5 @@
-﻿using SauceControl.Blake2Fast;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using SauceControl.Blake2Fast;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace EncodingHandler
             string toReturn;
             using (Stream temp = new MemoryStream(Encoding.UTF8.GetBytes(concatenatedString)))
             {
-                toReturn =  BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp);
+                toReturn = BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp);
             }
 
             return toReturn;
@@ -74,7 +75,7 @@ namespace EncodingHandler
         {
             if (sortedValues == null)
                 return String.Empty;
-            return String.Join(".", sortedValues);
+            return String.Join(".", sortedValues).ToUpperInvariant();
         }
 
 
@@ -86,7 +87,7 @@ namespace EncodingHandler
         /// <param name="digestLength">Optional parameter for digest Length to be used when Hashing. Defaults to 32</param>
         /// <param name="bufferToDigestRatio">Optional parameter to define buffer size as a ratio to the Digest Length. Defaults to 128
         /// The bigger the bufferToDigestRatio, the more you are sacrificing memory use to gain speed.</param>
-        /// <returns>Returns Base64 Encoded String with hashed value</returns>
+        /// <returns>Returns Base64Url Encoded String with hashed value</returns>
         public static string ComputeBase64Blake2bHashInBuffers(Stream data, int digestLength = 32, int bufferToDigestRatio = 128)
         {
             var hasher = Blake2b.CreateIncrementalHasher(digestLength);
@@ -97,8 +98,7 @@ namespace EncodingHandler
                 hasher.Update(new Span<byte>(buffer, 0, bytesRead));
 
             ArrayPool<byte>.Shared.Return(buffer);
-
-            return Convert.ToBase64String(hasher.Finish());
+            return WebEncoders.Base64UrlEncode(hasher.Finish());
 
         }
     }
