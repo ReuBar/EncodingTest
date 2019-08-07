@@ -11,26 +11,28 @@ namespace EncodingHandler
 {
     public static class BerTlvLogic
     {
-        public static string GetBase64HashFromEncodedStringForGivenTags(string[] tags, string encodedString)
+        /// <summary>
+        /// Main method to be called. Given an encoded string and an array of tags, will return a Base64URL encoded hash
+        /// </summary>
+        /// <param name="tags">An array of tags to extract and use.</param>
+        /// <param name="encodedString">The original BER TLV encoded string to start from</param>
+        /// <returns>A Base64 URL Encoded Blake2b hashed string, extracted from the original encoded string, only using the ordered tags provided.</returns>
+        public static string GetBase64UrlHashFromEncodedStringForGivenTags(string[] tags, string encodedString)
         {
             List<string> sortedValues = ExtractSortedRequestedTagsFromString(tags, encodedString);
             string concatenatedString = CreateFullstopSeparatedString(sortedValues);
 
-            string toReturn;
             using (Stream temp = new MemoryStream(Encoding.UTF8.GetBytes(concatenatedString)))
             {
-                toReturn = BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp);
+                return BerTlvLogic.ComputeBase64Blake2bHashInBuffers(temp);
             }
-
-            return toReturn;
-
         }
 
         /// <summary>
         /// Wrap Hexademical to Integer conversion into a well-named method
         /// </summary>
         /// <param name="hex">Hexadecimal value to convert, in format 0x** </param>
-        /// <returns></returns>
+        /// <returns>Integer value for Hex provided</returns>
         public static int HexadecimalToInteger(string hex)
         {
             return Convert.ToInt32(hex.Trim(), 16);
@@ -48,13 +50,16 @@ namespace EncodingHandler
         {
             var allBerValues = BerTlv.Tlv.ParseTlv(encodedString);
 
+            if (tags == null)
+                return new List<string>();
+
             List<int> sortedIds = tags.Select(f => HexadecimalToInteger(f)).ToList();
             sortedIds.Sort();
 
             List<string> requestedTagsToReturn = new List<string>();
             foreach (int tagId in sortedIds)
             {
-                if (allBerValues.Any(f => f.Tag == tagId))
+                if (allBerValues.Any(f => f.Tag == tagId)) // Only keep tags requested
                 {
                     requestedTagsToReturn.Add(allBerValues.First(g => g.Tag == tagId).HexValue);
                 }
@@ -86,12 +91,12 @@ namespace EncodingHandler
         /// <param name="data">Stream of data to be hashed</param>
         /// <param name="digestLength">Optional parameter for digest Length to be used when Hashing. Defaults to 32</param>
         /// <param name="bufferToDigestRatio">Optional parameter to define buffer size as a ratio to the Digest Length. Defaults to 128
-        /// The bigger the bufferToDigestRatio, the more you are sacrificing memory use to gain speed.</param>
+        /// The bigger the bufferToDigestRatio, the more you are sacrificing memory used to gain speed.</param>
         /// <returns>Returns Base64Url Encoded String with hashed value</returns>
         public static string ComputeBase64Blake2bHashInBuffers(Stream data, int digestLength = 32, int bufferToDigestRatio = 128)
         {
             var hasher = Blake2b.CreateIncrementalHasher(digestLength);
-            var buffer = ArrayPool<byte>.Shared.Rent(digestLength);
+            var buffer = ArrayPool<byte>.Shared.Rent(digestLength * bufferToDigestRatio);
 
             int bytesRead;
             while ((bytesRead = data.Read(buffer, 0, buffer.Length)) > 0)

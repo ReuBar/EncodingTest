@@ -56,8 +56,9 @@ Given more time:
 	
 * A better structure for the code would have been used
 * A logging framework such as Log4Net would have been used
-* I would have created a proper branch and worked on it, and merged at the end, rather than working on Main
+* I would have created a proper branch and worked on it, and merged at the end, rather than working on Main.
 * Extension methods would have been used for methods such as converting hex to int.
 * LINQ could have been used for handling of data, but for readability this was not done to avoid having massive one-liners.
 * Performance metrics would have been gathered and recorded over time, to ensure no performance degradation happens with subsequent commits.
+* I would have exposed DigestLength and BufferSize all the way to the config file to make them more configurable. 
 

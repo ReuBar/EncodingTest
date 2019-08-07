@@ -1,10 +1,6 @@
 ﻿using EncodingHandler;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blake2bHasher
 {
@@ -14,20 +10,19 @@ namespace Blake2bHasher
         {
 
             #region Read Data from Config File
-            string encodedStringKey = "EncodedString";
-            string tagsIdKey = "TagIds";
-            string encodedString = ConfigurationManager.AppSettings[encodedStringKey];
+
+            string encodedString = ConfigurationManager.AppSettings[ConfigKeys.EncodedStringKey];
             if (String.IsNullOrWhiteSpace(encodedString))
             {
-                Console.WriteLine($"Missing {encodedStringKey} value in ConfigFile. Current Value is: {encodedString}. Press any Key to Exit.");
+                Console.WriteLine($"Missing {ConfigKeys.EncodedStringKey} value in ConfigFile. Current Value is: {encodedString}. Press any Key to Exit.");
                 Console.ReadKey();
                 return;
             }
 
-            string tagIds = ConfigurationManager.AppSettings[tagsIdKey];
+            string tagIds = ConfigurationManager.AppSettings[ConfigKeys.TagsIdKey];
             if (String.IsNullOrWhiteSpace(tagIds))
             {
-                Console.WriteLine($"Missing {tagsIdKey} value in ConfigFile. Current Value is: {tagIds}. Press any Key to Exit.");
+                Console.WriteLine($"Missing {ConfigKeys.TagsIdKey} value in ConfigFile. Current Value is: {tagIds}. Press any Key to Exit.");
                 Console.ReadKey();
                 return;
             }
@@ -42,11 +37,12 @@ namespace Blake2bHasher
 
             #endregion
 
+
             #region Get hash from values extracted
 
             try
             {
-                string hash = BerTlvLogic.GetBase64HashFromEncodedStringForGivenTags(requestedTags, encodedString);
+                string hash = BerTlvLogic.GetBase64UrlHashFromEncodedStringForGivenTags(requestedTags, encodedString);
                 Console.WriteLine($"Extracted hash: {hash} from Encoded String: {encodedString} for tags: {String.Join(",", requestedTags)}. Press any Key to Exit.");
                 Console.ReadKey();
                 return;
